@@ -3,3 +3,5 @@ spring:
     name: history-app
   profiles:
     active: local
+
+
