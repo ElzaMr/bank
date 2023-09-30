@@ -28,7 +28,7 @@ public class History {
     private Long id;
 
     @Schema(description = "ID number of record transferAuditId")
-    @Min(1)
+    @Min(value = 1, message = "The number must be greater than 0")
     private Long transferAuditId;
 
     @Schema(description = "ID number of record profileAuditId")
