@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -39,14 +41,14 @@ public class HistoryControllerImpl implements HistoryController<History, History
     @Operation(summary = "Create a new history")
     @Override
     @PostMapping()
-    public ResponseEntity<HistoryDTO> save(@Parameter(description = "ID of the story you want to change") @RequestBody History entity) {
+    public ResponseEntity<HistoryDTO> save(@Parameter(description = "ID of the story you want to change")@Validated @RequestBody History entity) {
         return ResponseEntity.ok(serviceHistory.save(entity));
     }
 
     @Operation(summary = "Update history by id")
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<HistoryDTO> patch(@Parameter(description = "id of the history") @PathVariable Long id, @Parameter(description = "new history data") @RequestBody History updatedHistory) {
+    public ResponseEntity<HistoryDTO> patch(@Parameter(description = "id of the history") @PathVariable Long id, @Parameter(description = "new history data")@Valid @RequestBody History updatedHistory) {
         return ResponseEntity.ok(serviceHistory.patch(id, updatedHistory));
     }
 

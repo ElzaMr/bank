@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import javax.persistence.*;
+import javax.validation.Constraint;
 import javax.validation.constraints.Min;
 
 /**
@@ -27,7 +28,7 @@ public class History {
     private Long id;
 
     @Schema(description = "ID number of record transferAuditId")
-    @Min(value = 1, message = "The number must be greater than 0")
+    @Min(1)
     private Long transferAuditId;
 
     @Schema(description = "ID number of record profileAuditId")

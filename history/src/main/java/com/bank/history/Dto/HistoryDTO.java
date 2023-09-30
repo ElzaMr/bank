@@ -6,41 +6,24 @@ import lombok.*;
 /**
  * Класс ДТО, нет поля id
  */
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-@Schema(description = "Entity of History")
-public class HistoryDTO {
+@Schema(description = "History's DTO")
+public record HistoryDTO(
+        @Schema(description = "Entity Change ID HistoryAudit")
+        Long transferAuditId,
 
-    @Schema(description = "Entity Change ID HistoryAudit")
-    private Long transferAuditId;
+        @Schema(description = "Entity Change ID profileAuditId")
+        Long profileAuditId,
 
-    @Schema(description = "Entity Change ID profileAuditId")
-    private Long profileAuditId;
+        @Schema(description = "Entity Change ID accountAuditId")
+        Long accountAuditId,
 
-    @Schema(description = "Entity Change ID accountAuditId")
-    private Long accountAuditId;
+        @Schema(description = "Entity Change ID antiFraudAuditId")
+        Long antiFraudAuditId,
 
-    @Schema(description = "Entity Change ID antiFraudAuditId")
-    private Long antiFraudAuditId;
+        @Schema(description = "Entity Change ID publicBankInfoAuditId")
+        Long publicBankInfoAuditId,
 
-    @Schema(description = "Entity Change ID publicBankInfoAuditId")
-    private Long publicBankInfoAuditId;
-
-    @Schema(description = "Entity Change ID authorizationAuditId")
-    private Long authorizationAuditId;
-
-
-    public String toString() {
-        return "{\n" +
-                "\"transferAuditId\": " + transferAuditId + ",\n" +
-                "\"profileAuditId\": " + profileAuditId + ",\n" +
-                "\"accountAuditId\": " + accountAuditId + ",\n" +
-                "\"antiFraudAuditId\": " + antiFraudAuditId + ",\n" +
-                "\"publicBankInfoAuditId\": " + publicBankInfoAuditId + ",\n" +
-                "\"authorizationAuditId\": " + authorizationAuditId + "\n" +
-                '}';
-    }
+        @Schema(description = "Entity Change ID authorizationAuditId")
+        Long authorizationAuditId) {
 }
