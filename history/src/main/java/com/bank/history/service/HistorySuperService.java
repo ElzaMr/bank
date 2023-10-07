@@ -1,16 +1,18 @@
 package com.bank.history.service;
 
+import liquibase.pro.packaged.D;
+
 import java.util.List;
 
-public interface HistorySuperService<Entity, Dto> {
-    public List<Dto> showAll();
+public interface HistorySuperService<Entity> {
+    public List<Entity> showAll();
 
-    public Dto findById(Long id);
+    public Entity findById(Long id);
 
-    public Dto save(Entity entity);
+    public Entity save(Entity entity);
 
-    Dto patch(Long id, Entity entity);
+    Entity patch(Long id, Entity entity);
 
-    public Dto deleteById(Long id);
+    public Entity deleteById(Long id);
 
 }

@@ -3,14 +3,10 @@ package com.bank.history.aspect;
 import com.bank.history.entity.History;
 import com.bank.history.entity.HistoryAudit;
 import com.bank.history.service.HistoryAuditService;
-import com.bank.history.service.HistoryService;
 import com.bank.history.util.RandomUserCreated;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -24,21 +20,21 @@ import java.time.LocalDateTime;
 public class HistoryAuditAspect {
 
     private final HistoryAuditService auditService;
-
-    private final HistoryService historyService;
+    private final LocalDateTime localDateTime = LocalDateTime.now();
 
     /**
-     * Заполнение сущности аудит из контроллера save
-     * параметр history - параметр из тела запроса
+     * Заполнение сущности аудит из метода save сервиса
+     * history - возвращаемое значение из метода сервиса
      */
-    @Before(value = "execution(* com.bank.history.controller.HistoryControllerImpl.save(..)) && args( history)"
-            , argNames = "history")
+    @AfterReturning(value = "execution(* com.bank.history.service.HistoryServiceImpl.save(..))"
+            , returning = "history")
     public void save(History history) {
+
         HistoryAudit historyAudit = HistoryAudit.builder()
                 .entityType(history.getClass().toString())
                 .operationType("create")
                 .createdBy(RandomUserCreated.returnRandomUser())
-                .createdAt(LocalDateTime.now())
+                .createdAt(localDateTime)
                 .entityJson(history.toString())
                 .newEntityJson(null)
                 .build();
@@ -47,27 +43,25 @@ public class HistoryAuditAspect {
 
     /**
      * Аудирование метода update
-     *
-     * @param id             - id передаваемый в параметрах метода контроллера patch();
-     * @param updatedHistory - json передаваемый в параметре метода контроллера, обновленная сущность
+     * history - возвращаемое значение из метода сервиса
      */
-    @Before(value = "execution(* com.bank.history.controller.HistoryControllerImpl.patch(..)) && args(id, updatedHistory)"
-            , argNames = "id,updatedHistory")
-    public void beforeUpdateHistory(Long id, History updatedHistory) {
-        updatedHistory.setId(id);
-        String idString = String.format("id=%d,", id);
-        HistoryAudit historyAudits = auditService.findByEntityJsonContaining(idString);//получаем строку
-        History history = historyService.getById(id);//находим старый джсон
+    @AfterReturning(value = "execution(* com.bank.history.service.HistoryServiceImpl.patch(..))"
+            , returning = "history", argNames = "history")
+    public void beforeUpdateHistory(History history) {
+
+        HistoryAudit historyAudits = auditService
+                .findByEntityJsonContaining(String.format("id=%d", history.getId()))
+                .orElseThrow();
 
         HistoryAudit historyAudit = HistoryAudit.builder()
-                .entityType(updatedHistory.getClass().getName())
+                .entityType(history.getClass().getName())
                 .operationType("update")
                 .createdBy(historyAudits.getCreatedBy())
                 .modifiedBy(RandomUserCreated.returnRandomUser())
                 .createdAt(historyAudits.getCreatedAt())
-                .modifiedAt(LocalDateTime.now())
-                .entityJson(history.toString())
-                .newEntityJson(updatedHistory.toString())
+                .modifiedAt(localDateTime)
+                .entityJson(historyAudits.getEntityJson())//старый json
+                .newEntityJson(history.toString())
                 .build();
         auditService.save(historyAudit);
 
@@ -75,16 +69,15 @@ public class HistoryAuditAspect {
 
     /**
      * Аудирование метода контроллера delete
-     *
-     * @param id - id из параметров метода контроллера deleteHistory()
+     * history - возвращаемое значение из метода сервиса
      */
-    @Before(value = "execution(* com.bank.history.controller.HistoryController.delete(..)) && args(id)"
-            , argNames = "id")
-    public void beforeDeleteHistory(Long id) {
+    @AfterReturning(value = "execution(* com.bank.history.service.HistoryServiceImpl.deleteById(..))"
+            , returning = "history", argNames = "history")
+    public void beforeDeleteHistory(History history) {
 
-        History history = historyService.getById(id);
-        String idString = String.format("id=%d,", id);
-        HistoryAudit historyAudits = auditService.findByEntityJsonContaining(idString);
+        HistoryAudit historyAudits = auditService
+                .findByEntityJsonContaining(String.format("id=%d", history.getId()))
+                .orElseThrow();
 
         HistoryAudit historyAudit = HistoryAudit.builder()
                 .entityType(history.getClass().getName())
@@ -92,7 +85,7 @@ public class HistoryAuditAspect {
                 .createdBy(historyAudits.getCreatedBy())
                 .modifiedBy(RandomUserCreated.returnRandomUser())
                 .createdAt(historyAudits.getCreatedAt())
-                .modifiedAt(LocalDateTime.now())
+                .modifiedAt(localDateTime)
                 .entityJson(historyAudits.getEntityJson())
                 .newEntityJson(null)
                 .build();

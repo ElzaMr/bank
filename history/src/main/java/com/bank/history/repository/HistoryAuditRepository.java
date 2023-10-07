@@ -5,6 +5,8 @@ import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 /**
  * Репозиторий AuditHistory
  */
@@ -15,5 +17,5 @@ public interface HistoryAuditRepository extends JpaRepository<HistoryAudit, Long
      * @return записьHistoryAudit
      */
     @Query(value = "SELECT * FROM history.history_audit WHERE entity_json LIKE '%' || :value || '%'AND operation_type = 'create'", nativeQuery = true)
-    HistoryAudit findByEntityJsonContaining(@Param("value") String value);
+    Optional<HistoryAudit> findByEntityJsonContaining(@Param("value") String value);
 }

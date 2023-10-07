@@ -2,6 +2,7 @@ package com.bank.history.controller;
 
 import com.bank.history.Dto.HistoryDTO;
 import com.bank.history.entity.History;
+import com.bank.history.mapper.HistoryMapper;
 import com.bank.history.service.HistorySuperService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,40 +23,49 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class HistoryControllerImpl implements HistoryController<History, HistoryDTO> {
-    private final HistorySuperService<History, HistoryDTO> serviceHistory;
+    private final HistorySuperService<History> serviceHistory;
+    private  final HistoryMapper mapper;
 
     @Operation(summary = "Get list of history")
     @Override
     @GetMapping()
     public ResponseEntity<List<HistoryDTO>> showAll() {
-        return ResponseEntity.ok(serviceHistory.showAll());
+        return ResponseEntity.ok(serviceHistory.showAll().stream()
+                .map(mapper::toDTO).toList());
     }
 
     @Operation(summary = "Get history by id")
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<HistoryDTO> showOne(@Parameter(description = "id of the history you want to find") @PathVariable Long id) {
-        return ResponseEntity.ok(serviceHistory.findById(id));
+        return ResponseEntity.ok(mapper.toDTO(serviceHistory.findById(id)));
     }
 
     @Operation(summary = "Create a new history")
     @Override
     @PostMapping()
-    public ResponseEntity<HistoryDTO> save(@Parameter(description = "ID of the story you want to change")@Validated @RequestBody History entity) {
-        return ResponseEntity.ok(serviceHistory.save(entity));
+    public ResponseEntity<HistoryDTO> save(
+            @Parameter(description = "ID of the story you want to change")
+            @Validated @RequestBody History entity) {
+        return ResponseEntity.ok(mapper.toDTO(serviceHistory.save(entity)));
     }
 
     @Operation(summary = "Update history by id")
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<HistoryDTO> patch(@Parameter(description = "id of the history") @PathVariable Long id, @Parameter(description = "new history data")@Valid @RequestBody History updatedHistory) {
-        return ResponseEntity.ok(serviceHistory.patch(id, updatedHistory));
+    public ResponseEntity<HistoryDTO> patch(
+            @Parameter(description = "id of the history")
+            @PathVariable Long id, @Parameter(description = "new history data")
+            @Valid @RequestBody History updatedHistory) {
+        return ResponseEntity.ok(mapper.toDTO(serviceHistory.patch(id, updatedHistory)));
     }
 
     @Operation(summary = "Delete history by id")
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<HistoryDTO> delete(@Parameter(description = "ID of the story you want to delete") @PathVariable Long id) {
-        return ResponseEntity.ok(serviceHistory.deleteById(id));
+    public ResponseEntity<HistoryDTO> delete(
+            @Parameter(description = "ID of the story you want to delete")
+            @PathVariable Long id) {
+        return ResponseEntity.ok(mapper.toDTO(serviceHistory.deleteById(id)));
     }
 }

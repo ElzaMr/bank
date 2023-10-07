@@ -39,11 +39,11 @@ public class HistoryAudit {
     private String modifiedBy;
 
     @Schema(description = "time when the record was created")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 
     @Schema(description = "time when the record was modified")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyy-MM-dd HH:mm")
     private LocalDateTime modifiedAt;
 
     @Schema(description = "new Json of the entity")

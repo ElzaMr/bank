@@ -1,11 +1,13 @@
 package com.bank.history.service;
 
+import com.bank.history.Dto.HistoryDTO;
 import com.bank.history.entity.HistoryAudit;
 import com.bank.history.repository.HistoryAuditRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +43,7 @@ public class HistoryAuditServiceImpl implements HistoryAuditService {
     }
 
     @Override
-    public HistoryAudit findByEntityJsonContaining(String value) {
+    public Optional<HistoryAudit> findByEntityJsonContaining(String value) {
         return repository.findByEntityJsonContaining(value);
     }
 

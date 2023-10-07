@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import javax.persistence.*;
-import javax.validation.Constraint;
 import javax.validation.constraints.Min;
 
 /**

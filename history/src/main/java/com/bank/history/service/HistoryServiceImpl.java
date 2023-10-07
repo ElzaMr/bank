@@ -18,38 +18,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HistoryServiceImpl implements HistoryService {
 
-    private final HistoryMapper historyMapper;
     private final HistoryRepository repository;
 
     @Override
-    public List<HistoryDTO> showAll() {
-        return repository.findAll().stream().map(historyMapper::toDTO).toList();
+    public List<History> showAll() {
+        return repository.findAll().stream().toList();
     }
 
     @Override
-    public HistoryDTO findById(Long id) {
-        return historyMapper.toDTO(repository.findById(id).orElseThrow(() -> new NotFoundException(String.format("History with id %d not found", id))));
-    }
-
-    @Transactional
-    @Override
-    public HistoryDTO save(History history) {
-        return historyMapper.toDTO(repository.save(history));
+    public History findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException(String.format("History with id %d not found", id)));
     }
 
     @Transactional
     @Override
-    public HistoryDTO patch(Long id, History history) {
+    public History save(History history) {
+        return repository.save(history);
+    }
+
+    @Transactional
+    @Override
+    public History patch(Long id, History history) {
         history.setId(id);
-        return historyMapper.toDTO(repository.save(history));
+        return repository.save(history);
     }
 
     @Transactional
     @Override
-    public HistoryDTO deleteById(Long id) {
-        HistoryDTO dto = historyMapper.toDTO(repository.findById(id).orElseThrow());//сначала нужно найти сущность, после удаления мы ее уже не найдем :)
+    public History deleteById(Long id) {
+        History history = repository.findById(id).orElseThrow();
         repository.deleteById(id);
-        return dto;
+        return history;
     }
 
     public History getById(Long id) {

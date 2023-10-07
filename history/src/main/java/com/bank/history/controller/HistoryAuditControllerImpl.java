@@ -19,7 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class HistoryAuditControllerImpl implements HistoryController<HistoryAudit, HistoryAudit> {
-    private final HistorySuperService<HistoryAudit, HistoryAudit> service;
+
+    private final HistorySuperService<HistoryAudit> service;
 
     @Tag(name = "GetAllAuditRecords", description = "Returns all audit records")
     @Override
@@ -32,26 +33,30 @@ public class HistoryAuditControllerImpl implements HistoryController<HistoryAudi
     @Tag(name = "GetAuditRecordsByID", description = "Returns audit records by id")
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<HistoryAudit> showOne(@Parameter(description = "HistoryAudit's id")
-                                                @PathVariable Long id) {
+    public ResponseEntity<HistoryAudit> showOne(
+            @Parameter(description = "HistoryAudit's id")
+            @PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @Tag(name = "CreateAuditRecords", description = "Create audit records")
     @Override
     @PostMapping
-    public ResponseEntity<HistoryAudit> save(@Parameter(description = "HistoryAudit's data")
-                                             @RequestBody HistoryAudit historyAudit) {
+    public ResponseEntity<HistoryAudit> save(
+            @Parameter(description = "HistoryAudit's data")
+            @RequestBody HistoryAudit historyAudit) {
         return ResponseEntity.ok(service.save(historyAudit));
     }
 
     @Tag(name = "UpdateAuditRecordsByID", description = "Update audit records by id")
     @Override
     @PatchMapping("/{id}")
-    public ResponseEntity<HistoryAudit> patch(@Parameter(description = "\n" +
-            "ID of the entity we want to change") @PathVariable Long id,
-                                              @Parameter(description = "the data we want to place instead of the old ones")
-                                              @RequestBody HistoryAudit updatedEntity) {
+    public ResponseEntity<HistoryAudit> patch(
+            @Parameter(description = "\n" +
+                    "ID of the entity we want to change")
+            @PathVariable Long id,
+            @Parameter(description = "the data we want to place instead of the old ones")
+            @RequestBody HistoryAudit updatedEntity) {
         return ResponseEntity.ok(service.patch(id, updatedEntity));
     }
 

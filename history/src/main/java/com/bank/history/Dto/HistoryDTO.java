@@ -26,4 +26,34 @@ public record HistoryDTO(
 
         @Schema(description = "Entity Change ID authorizationAuditId")
         Long authorizationAuditId) {
+
+    @Override
+    public Long transferAuditId() {
+        return transferAuditId;
+    }
+
+    @Override
+    public Long profileAuditId() {
+        return profileAuditId;
+    }
+
+    @Override
+    public Long accountAuditId() {
+        return accountAuditId;
+    }
+
+    @Override
+    public Long antiFraudAuditId() {
+        return antiFraudAuditId;
+    }
+
+    @Override
+    public Long publicBankInfoAuditId() {
+        return publicBankInfoAuditId;
+    }
+
+    @Override
+    public Long authorizationAuditId() {
+        return authorizationAuditId;
+    }
 }
