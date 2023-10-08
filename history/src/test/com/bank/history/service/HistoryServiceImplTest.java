@@ -1,129 +1,120 @@
-//package com.bank.history.service;
-//
-//
-//import com.bank.history.Dto.HistoryDTO;
-//import com.bank.history.entity.History;
-//import com.bank.history.mapper.HistoryMapper;
-//import com.bank.history.repository.HistoryRepository;
-//import org.junit.jupiter.api.BeforeAll;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
-//
-//@ExtendWith(MockitoExtension.class)
-//class HistoryServiceImplTest {
-//
-//    @Mock
-//    private HistoryRepository repository;
-//
-//    @Mock
-//    private HistoryMapper historyMapper;
-//
-//    //    @InjectMocks
-//    private HistoryServiceImpl historyService;
-//
-//    private static History historyTest;
-//    private static HistoryDTO historyDTOTest;
-//
-//    @BeforeAll
-//    public static void setUp() {
-//        historyTest = new History(1L, 2L, 3L, 4L, 5L, 6L, 7L);
-//        historyDTOTest = new HistoryDTO(2L, 3L, 4L, 5L, 6L, 7L);
-//    }
-//
-//    @BeforeEach
-//    public void init() {
-//        historyService = new HistoryServiceImpl(historyMapper, repository);
-//    }
-//
-//    @Test
-//    void showAll() {
-//        List<History> histories = new ArrayList<>();
-//        histories.add(historyTest);
-//        when(repository.findAll()).thenReturn(histories);
-//        when(historyMapper.toDTO(historyTest)).thenReturn(historyDTOTest);
-//
-//        List<HistoryDTO> historyDTOList = historyService.showAll();
-//
-//        assertEquals(historyDTOList.size(), 1);
-//        assertEquals(historyDTOList.get(0), historyDTOTest);
-//    }
-//
-//    @Test
-//    void showOne() {
-//        when(repository.findById(any(Long.class))).thenReturn(Optional.of(historyTest));
-//        when(historyMapper.toDTO(historyTest)).thenReturn(historyDTOTest);
-//
-//        HistoryDTO result = historyService.findById(1L);
-//
-//        assertNotNull(result);
-//        assertEquals(result, historyDTOTest);
-//    }
-//
-//
-//    @Test
-//    void findById() {
-//        when(repository.findById(any(Long.class))).thenReturn(Optional.of(historyTest));
-//        when(historyMapper.toDTO(historyTest)).thenReturn(historyDTOTest);
-//
-//        HistoryDTO result = historyService.findById(1L);
-//
-//        assertNotNull(result);
-//        assertEquals(historyDTOTest, result);
-//    }
-//
-//    @Test
-//    public void save() {
-//        when(repository.save(any(History.class))).thenReturn(historyTest);
-//        when(historyMapper.toDTO(historyTest)).thenReturn(historyDTOTest);
-//
-//       historyService.save(historyTest);
-//
-//        assertNotNull(result);
-//        assertEquals(historyDTOTest, result);
-//    }
-//
-//    @Test
-//    void patch() {
-//        when(repository.save(any(History.class))).thenReturn(historyTest);
-//        when(historyMapper.toDTO(historyTest)).thenReturn(historyDTOTest);
-//
-//        HistoryDTO result = historyService.patch(1L, historyTest);
-//
-//        assertNotNull(result);
-//        assertEquals(historyDTOTest, result);
-//    }
-//
-//    @Test
-//    void deleteById() {
-//        when(repository.findById(any(Long.class))).thenReturn(Optional.of(historyTest));
-//        when(historyMapper.toDTO(historyTest)).thenReturn(historyDTOTest);
-//
-//        HistoryDTO result = historyService.deleteById(1L);
-//
-//        assertNotNull(result);
-//        assertEquals(historyDTOTest, result);
-//        verify(repository, times(1)).deleteById(any(Long.class));
-//    }
-//
-//    @Test
-//    void getById() {
-//        when(repository.findById(any(Long.class))).thenReturn(Optional.of(historyTest));
-//
-//        History result = historyService.getById(1L);
-//
-//        assertNotNull(result);
-//        assertEquals(historyTest, result);
-//    }
-//}
+package com.bank.history.service;
+
+
+import com.bank.history.Dto.HistoryDTO;
+import com.bank.history.entity.History;
+import com.bank.history.repository.HistoryRepository;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.webjars.NotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class HistoryServiceImplTest {
+
+    @Mock
+    private HistoryRepository repository;
+
+    @InjectMocks
+    private HistoryServiceImpl historyService;
+
+    private static History historyTest;
+    private static HistoryDTO historyDTOTest;
+
+    @BeforeAll
+    public static void setUp() {
+        historyTest = new History(2L, 3L, 4L, 5L, 6L, 7L);
+    }
+
+    @BeforeEach
+    public void init() {
+        historyService = new HistoryServiceImpl(repository);
+    }
+
+    @Test
+    void showAll() {
+        List<History> histories = new ArrayList<>();
+        histories.add(historyTest);
+        when(repository.findAll()).thenReturn(histories);
+
+        List<History> historyDTOList = historyService.showAll();
+        assertAll(
+                () -> assertNotNull(historyDTOList),
+                () -> assertEquals(historyDTOList.size(), 1),
+                () -> assertNotEquals(historyDTOList.get(0).toString(), ""),
+                () -> assertEquals(historyDTOList.get(0), historyTest)
+        );
+    }
+
+    @Test
+    void serviceThrowExceptionIfDontFoundRecord() {
+        when(repository.findById(2L)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> historyService.findById(2L));
+    }
+
+    @Test
+    void checkReturnType() {
+        when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+
+        assertEquals(historyTest, historyService.findById(1L));
+    }
+
+    @Test
+    void checkThatReturnTypeNotNull() {
+        when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+
+        assertNotNull(historyService.findById(1L));
+    }
+
+    @Test
+    void checkSaveMethod() {
+        when(repository.save(any(History.class))).thenReturn(historyTest);
+
+        assertAll(
+                () -> assertNotNull(historyService.save(historyTest)),
+                () -> assertEquals(historyTest, historyService.save(historyTest))
+        );
+    }
+
+    @Test
+    void historySetId() {
+        when(repository.save(any(History.class))).thenReturn(historyTest);
+        when(repository.findById(2L)).thenReturn(Optional.ofNullable(historyTest));
+
+        historyService.patch(2L, historyTest);
+        assertAll(
+                () -> assertEquals(2L, historyTest.getId()),
+                () -> assertThrows(NotFoundException.class, () -> historyService.patch(1L, historyTest)
+                ));
+    }
+
+    @Test
+    void deleteById() {
+        when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+        when(repository.findById(2L)).thenReturn(Optional.empty());
+
+        History result = historyService.deleteById(1L);
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertNotEquals("", result.toString()),
+                () -> assertEquals(historyTest, result),
+                () -> verify(repository, times(1)).deleteById(any(Long.class)),
+                () -> assertThrows(NoSuchElementException.class, () -> historyService.deleteById(2L))
+        );
+
+    }
+}

@@ -1,8 +1,6 @@
 package com.bank.history.service;
 
-import com.bank.history.Dto.HistoryDTO;
 import com.bank.history.entity.History;
-import com.bank.history.mapper.HistoryMapper;
 import com.bank.history.repository.HistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +37,7 @@ public class HistoryServiceImpl implements HistoryService {
     @Transactional
     @Override
     public History patch(Long id, History history) {
+        repository.findById(id).orElseThrow(() -> new NotFoundException("History with id " + id + " not found"));
         history.setId(id);
         return repository.save(history);
     }
@@ -49,9 +48,5 @@ public class HistoryServiceImpl implements HistoryService {
         History history = repository.findById(id).orElseThrow();
         repository.deleteById(id);
         return history;
-    }
-
-    public History getById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException(String.format("История с идентификатором %d не найдена", id)));
     }
 }

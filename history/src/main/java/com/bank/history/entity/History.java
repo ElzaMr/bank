@@ -3,6 +3,7 @@ package com.bank.history.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 
@@ -49,6 +50,17 @@ public class History {
     @Schema(description = "ID number of record authorizationAuditId")
     @Min(value = 1, message = "The number must be greater than 0")
     private Long authorizationAuditId;
+
+    public History(Long transferAuditId, Long profileAuditId,
+                   Long accountAuditId, Long antiFraudAuditId,
+                   Long publicBankInfoAuditId, Long authorizationAuditId) {
+        this.transferAuditId = transferAuditId;
+        this.profileAuditId = profileAuditId;
+        this.accountAuditId = accountAuditId;
+        this.antiFraudAuditId = antiFraudAuditId;
+        this.publicBankInfoAuditId = publicBankInfoAuditId;
+        this.authorizationAuditId = authorizationAuditId;
+    }
 
     @Override
     public String toString() {

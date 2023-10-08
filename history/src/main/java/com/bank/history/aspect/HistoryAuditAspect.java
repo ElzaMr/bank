@@ -28,7 +28,7 @@ public class HistoryAuditAspect {
      */
     @AfterReturning(value = "execution(* com.bank.history.service.HistoryServiceImpl.save(..))"
             , returning = "history")
-    public void save(History history) {
+    public void afterSave(History history) {
 
         HistoryAudit historyAudit = HistoryAudit.builder()
                 .entityType(history.getClass().toString())
@@ -47,7 +47,7 @@ public class HistoryAuditAspect {
      */
     @AfterReturning(value = "execution(* com.bank.history.service.HistoryServiceImpl.patch(..))"
             , returning = "history", argNames = "history")
-    public void beforeUpdateHistory(History history) {
+    public void afterUpdateHistory(History history) {
 
         HistoryAudit historyAudits = auditService
                 .findByEntityJsonContaining(String.format("id=%d", history.getId()))
@@ -73,7 +73,7 @@ public class HistoryAuditAspect {
      */
     @AfterReturning(value = "execution(* com.bank.history.service.HistoryServiceImpl.deleteById(..))"
             , returning = "history", argNames = "history")
-    public void beforeDeleteHistory(History history) {
+    public void afterDeleteHistory(History history) {
 
         HistoryAudit historyAudits = auditService
                 .findByEntityJsonContaining(String.format("id=%d", history.getId()))
