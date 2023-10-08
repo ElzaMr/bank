@@ -2,15 +2,13 @@ package com.bank.history.service;
 
 import com.bank.history.entity.HistoryAudit;
 import com.bank.history.repository.HistoryAuditRepository;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.webjars.NotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,11 +28,17 @@ class HistoryAuditServiceImplTest {
     @InjectMocks
     private HistoryAuditServiceImpl historyService;
 
-    private static HistoryAudit historyTest;
+    private static HistoryAudit historyAudit;
 
     @BeforeAll
     public static void setUp() {
-        historyTest = new HistoryAudit();
+        historyAudit = new HistoryAudit(1L, "History",
+                "create",
+                "User",
+                "User",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                "qwe", "qwe");
     }
 
     @BeforeEach
@@ -42,76 +46,124 @@ class HistoryAuditServiceImplTest {
         historyService = new HistoryAuditServiceImpl(repository);
     }
 
-    @Test
-    void showAll() {
-        List<HistoryAudit> histories = new ArrayList<>();
-        histories.add(historyTest);
-        when(repository.findAll()).thenReturn(histories);
+    @Nested
+    @DisplayName("test showAll functionality")
+    @Tag("showAll")
+    class testShowAll {
+        @Test
+        void showAll() {
+            List<HistoryAudit> histories = new ArrayList<>();
+            histories.add(historyAudit);
+            when(repository.findAll()).thenReturn(histories);
 
-        List<HistoryAudit> historyDTOList = historyService.showAll();
-        assertAll(
-                () -> assertNotNull(historyDTOList),
-                () -> assertEquals(historyDTOList.size(), 1),
-                () -> assertNotEquals(historyDTOList.get(0).toString(), ""),
-                () -> assertEquals(historyDTOList.get(0), historyTest)
-        );
+            List<HistoryAudit> historyDTOList = historyService.showAll();
+            assertAll(
+                    () -> assertNotNull(historyDTOList),
+                    () -> assertEquals(historyDTOList.size(), 1),
+                    () -> assertNotEquals(historyDTOList.get(0).toString(), ""),
+                    () -> assertEquals(historyDTOList.get(0), historyAudit)
+            );
+        }
     }
 
-    @Test
-    void serviceThrowExceptionIfDontFoundRecord() {//todo
-        when(repository.findById(2L)).thenReturn(Optional.empty());
+    @Nested
+    @DisplayName("test findById functionality")
+    @Tag("findById")
+    class testFindByID {
+        @Test
+        void serviceThrowExceptionIfDontFoundRecord() {
+            when(repository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> historyService.findById(2L));
+            assertThrows(NoSuchElementException.class, () -> historyService.findById(2L));
+        }
+
+        @Test
+        void checkReturnType() {
+            when(repository.findById(1L)).thenReturn(Optional.of(historyAudit));
+
+            assertEquals(historyAudit, historyService.findById(1L));
+        }
+
+        @Test
+        void checkThatReturnTypeNotNull() {
+            when(repository.findById(1L)).thenReturn(Optional.of(historyAudit));
+
+            assertNotNull(historyService.findById(1L));
+        }
     }
 
-    @Test
-    void checkReturnType() {
-        when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+    @Nested
+    @DisplayName("test save functionality")
+    @Tag("save")
+    class testSaveByID {
+        @Test
+        void checkSaveMethod() {
+            when(repository.save(any(HistoryAudit.class))).thenReturn(historyAudit);
 
-        assertEquals(historyTest, historyService.findById(1L));
+            assertAll(
+                    () -> assertNotNull(historyService.save(historyAudit)),
+                    () -> assertEquals(historyAudit, historyService.save(historyAudit))
+            );
+        }
     }
 
-    @Test
-    void checkThatReturnTypeNotNull() {
-        when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+    @Nested
+    @DisplayName("test patch functionality")
+    @Tag("patch")
+    class testPatchByID {
+        @Test
+        void throwExceptionIfHistoryAuditNotFound() {
+            when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        assertNotNull(historyService.findById(1L));
+            assertThrows(NoSuchElementException.class, () -> historyService.patch(1L, historyAudit));
+        }
+
+        @Test
+        void checkReturnTypeAndSettingId() {
+            when(repository.findById(any(Long.class))).thenReturn(Optional.of(historyAudit));
+            HistoryAudit newAudit = new HistoryAudit("History",
+                    "create",
+                    "User1",
+                    "User1",
+                    LocalDateTime.now(),
+                    LocalDateTime.now(),
+                    "qwe1", "qwe1");
+            newAudit.setNewEntityJson("qwe");
+            when(repository.save(any(HistoryAudit.class))).thenReturn(newAudit);
+
+
+            historyService.patch(2L, newAudit);//new
+            assertAll(
+                    () -> assertNotEquals(newAudit, historyAudit),
+                    () -> assertEquals(2L, newAudit.getId())
+            );
+        }
+
+        @Test
+        void patchThrowExceptionIfHistoryAuditNotFound() {
+            when(repository.findById(any(Long.class))).thenReturn(Optional.empty());
+
+            assertThrows(NoSuchElementException.class, ()->historyService.patch(1L,historyAudit));
+        }
     }
 
-    @Test
-    void checkSaveMethod() {
-        when(repository.save(any(HistoryAudit.class))).thenReturn(historyTest);
+    @Nested
+    @DisplayName("test deleteById functionality")
+    @Tag("deleteById")
+    class testDeleteByID {
+        @Test
+        void deleteById() {
+            when(repository.findById(1L)).thenReturn(Optional.of(historyAudit));
+            when(repository.findById(2L)).thenReturn(Optional.empty());
 
-        assertAll(
-                () -> assertNotNull(historyService.save(historyTest)),
-                () -> assertEquals(historyTest, historyService.save(historyTest))
-        );
-    }
-
-    @Test
-    void historySetId() {//todo
-        when(repository.save(any(HistoryAudit.class))).thenReturn(historyTest);
-        when(repository.findById(2L)).thenReturn(Optional.of(historyTest));
-
-        historyService.patch(2L, historyTest);
-        assertAll(
-                () -> assertEquals(2L, historyTest.getId())
-//                () -> assertThrows(NotFoundException.class, () -> historyService.patch(1L, historyTest)
-                );
-    }
-
-    @Test
-    void deleteById() {
-        when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
-        when(repository.findById(2L)).thenReturn(Optional.empty());
-
-        HistoryAudit result = historyService.deleteById(1L);
-        assertAll(
-                () -> assertNotNull(result),
-                () -> assertNotEquals("", result.toString()),
-                () -> assertEquals(historyTest, result),
-                () -> verify(repository, times(1)).deleteById(any(Long.class)),
-                () -> assertThrows(NoSuchElementException.class, () -> historyService.deleteById(2L))
-        );
+            HistoryAudit result = historyService.deleteById(1L);
+            assertAll(
+                    () -> assertNotNull(result),
+                    () -> assertNotEquals("", result.toString()),
+                    () -> assertEquals(historyAudit, result),
+                    () -> verify(repository, times(1)).deleteById(any(Long.class)),
+                    () -> assertThrows(NoSuchElementException.class, () -> historyService.deleteById(2L))
+            );
+        }
     }
 }

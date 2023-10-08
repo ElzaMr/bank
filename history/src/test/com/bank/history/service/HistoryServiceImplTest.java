@@ -4,9 +4,7 @@ package com.bank.history.service;
 import com.bank.history.Dto.HistoryDTO;
 import com.bank.history.entity.History;
 import com.bank.history.repository.HistoryRepository;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -59,62 +57,82 @@ class HistoryServiceImplTest {
         );
     }
 
-    @Test
-    void serviceThrowExceptionIfDontFoundRecord() {
-        when(repository.findById(2L)).thenReturn(Optional.empty());
+    @Nested
+    @DisplayName("test findById functionality")
+    @Tag("findById")
+    class testFindById {
+        @Test
+        void serviceThrowExceptionIfDontFoundRecord() {
+            when(repository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> historyService.findById(2L));
+            assertThrows(NotFoundException.class, () -> historyService.findById(2L));
+        }
+
+        @Test
+        void checkReturnType() {
+            when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+
+            assertEquals(historyTest, historyService.findById(1L));
+        }
+
+        @Test
+        void checkThatReturnTypeNotNull() {
+            when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+
+            assertNotNull(historyService.findById(1L));
+        }
     }
 
-    @Test
-    void checkReturnType() {
-        when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+    @Nested
+    @DisplayName("test Save functionality")
+    @Tag("Save")
+    class testSaveById {
+        @Test
+        void checkSaveMethod() {
+            when(repository.save(any(History.class))).thenReturn(historyTest);
 
-        assertEquals(historyTest, historyService.findById(1L));
+            assertAll(
+                    () -> assertNotNull(historyService.save(historyTest)),
+                    () -> assertEquals(historyTest, historyService.save(historyTest))
+            );
+        }
     }
 
-    @Test
-    void checkThatReturnTypeNotNull() {
-        when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+    @Nested
+    @DisplayName("test Patch functionality")
+    @Tag("Patch")
+    class testPatch {
+        @Test
+        void checkPatch() {
+            when(repository.save(any(History.class))).thenReturn(historyTest);
+            when(repository.findById(2L)).thenReturn(Optional.ofNullable(historyTest));
 
-        assertNotNull(historyService.findById(1L));
+            historyService.patch(2L, historyTest);
+            assertAll(
+                    () -> assertEquals(2L, historyTest.getId()),
+                    () -> assertThrows(NotFoundException.class, () -> historyService.patch(1L, historyTest)
+                    ));
+        }
     }
 
-    @Test
-    void checkSaveMethod() {
-        when(repository.save(any(History.class))).thenReturn(historyTest);
+    @Nested
+    @DisplayName("test deleteById functionality")
+    @Tag("deleteById")
+    class testDeleteById {
 
-        assertAll(
-                () -> assertNotNull(historyService.save(historyTest)),
-                () -> assertEquals(historyTest, historyService.save(historyTest))
-        );
-    }
+        @Test
+        void deleteById() {
+            when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
+            when(repository.findById(2L)).thenReturn(Optional.empty());
 
-    @Test
-    void historySetId() {
-        when(repository.save(any(History.class))).thenReturn(historyTest);
-        when(repository.findById(2L)).thenReturn(Optional.ofNullable(historyTest));
-
-        historyService.patch(2L, historyTest);
-        assertAll(
-                () -> assertEquals(2L, historyTest.getId()),
-                () -> assertThrows(NotFoundException.class, () -> historyService.patch(1L, historyTest)
-                ));
-    }
-
-    @Test
-    void deleteById() {
-        when(repository.findById(1L)).thenReturn(Optional.of(historyTest));
-        when(repository.findById(2L)).thenReturn(Optional.empty());
-
-        History result = historyService.deleteById(1L);
-        assertAll(
-                () -> assertNotNull(result),
-                () -> assertNotEquals("", result.toString()),
-                () -> assertEquals(historyTest, result),
-                () -> verify(repository, times(1)).deleteById(any(Long.class)),
-                () -> assertThrows(NoSuchElementException.class, () -> historyService.deleteById(2L))
-        );
-
+            History result = historyService.deleteById(1L);
+            assertAll(
+                    () -> assertNotNull(result),
+                    () -> assertNotEquals("", result.toString()),
+                    () -> assertEquals(historyTest, result),
+                    () -> verify(repository, times(1)).deleteById(any(Long.class)),
+                    () -> assertThrows(NoSuchElementException.class, () -> historyService.deleteById(2L))
+            );
+        }
     }
 }

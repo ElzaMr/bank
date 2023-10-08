@@ -51,4 +51,18 @@ public class HistoryAudit {
 
     @Schema(description = "old Json of the entity")
     private String entityJson;
+
+    public HistoryAudit(String entityType, String operationType,
+                        String createdBy, String modifiedBy,
+                        LocalDateTime createdAt, LocalDateTime modifiedAt,
+                        String newEntityJson, String entityJson) {
+        this.entityType = entityType;
+        this.operationType = operationType;
+        this.createdBy = createdBy;
+        this.modifiedBy = modifiedBy;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.newEntityJson = newEntityJson;
+        this.entityJson = entityJson;
+    }
 }

@@ -25,12 +25,18 @@ class HistoryAuditControllerImplTest {
     @InjectMocks
     HistoryAuditControllerImpl historyController;
     private static final LocalDateTime localDateTime = LocalDateTime.now();
-    static HistoryAudit audit;
-    static List<HistoryAudit> listOfAudits;
+    private static HistoryAudit audit;
+    private static List<HistoryAudit> listOfAudits;
+    private ResponseEntity<HistoryAudit> result;
 
     @BeforeAll
     public static void setUp() {
-        audit = new HistoryAudit(1L, "History", "create", "User", "User1", localDateTime, localDateTime, "qwe", "qwe");
+        audit = new HistoryAudit(1L, "History",
+                "create",
+                "User",
+                "User1",
+                localDateTime, localDateTime,
+                "qwe", "qwe");
         listOfAudits = List.of(audit);
     }
 
@@ -40,8 +46,8 @@ class HistoryAuditControllerImplTest {
 
         ResponseEntity<List<HistoryAudit>> responseEntity = historyController.showAll();
         assertAll(
-                () -> assertEquals(Objects.requireNonNull(responseEntity.getBody()).size(), 1),
-                () -> assertEquals(Objects.requireNonNull(responseEntity.getBody()).get(0), audit)
+                () -> assertEquals(1, Objects.requireNonNull(responseEntity.getBody()).size()),
+                () -> assertEquals(audit, Objects.requireNonNull(responseEntity.getBody()).get(0))
         );
     }
 
@@ -49,11 +55,11 @@ class HistoryAuditControllerImplTest {
     void showOne() {
         when(service.findById(any(Long.class))).thenReturn(audit);
 
-        ResponseEntity<HistoryAudit> result = historyController.showOne(1L);
+        result = historyController.showOne(1L);
 
         assertAll(
                 () -> assertNotNull(result),
-                () -> assertEquals(result.getBody(), audit)
+                () -> assertEquals(audit, result.getBody())
         );
     }
 
@@ -61,9 +67,9 @@ class HistoryAuditControllerImplTest {
     void save() {
         when(service.save(any(HistoryAudit.class))).thenReturn(audit);
 
-        ResponseEntity<HistoryAudit> result = historyController.save(audit);
+        result = historyController.save(audit);
 
-        assertEquals(result.getBody(), audit);
+        assertEquals(audit, result.getBody());
     }
 
     @Test
@@ -71,12 +77,12 @@ class HistoryAuditControllerImplTest {
         audit.setId(2L);
         when(service.patch(any(Long.class), any(HistoryAudit.class))).thenReturn(audit);
 
-        ResponseEntity<HistoryAudit> result = historyController.patch(2L, audit);
+        result = historyController.patch(2L, audit);
 
         assertAll(
                 () -> assertNotNull(result.getBody()),
-                () -> assertEquals(result.getBody(), audit),
-                () -> assertEquals(Objects.requireNonNull(result.getBody()).getId(), 2L)
+                () -> assertEquals(audit, result.getBody()),
+                () -> assertEquals(2L, Objects.requireNonNull(result.getBody()).getId())
         );
     }
 
@@ -84,12 +90,12 @@ class HistoryAuditControllerImplTest {
     void delete() {
         when(service.deleteById(any(Long.class))).thenReturn(audit);
 
-        ResponseEntity<HistoryAudit> result = historyController.delete(1L);
+        result = historyController.delete(1L);
 
         assertAll(
                 () -> assertNotNull(result),
-                () -> assertEquals(Objects.requireNonNull(result.getBody()).getId(), 1L),
-                () -> assertEquals(result.getBody(), audit)
+                () -> assertEquals(1L, Objects.requireNonNull(result.getBody()).getId()),
+                () -> assertEquals(audit, result.getBody())
         );
     }
 }

@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class HistoryMapperTest {
-    History history;
-    HistoryDTO historyDTO;
-    HistoryMapper historyMapper;
+    private History history;
+    private HistoryDTO historyDTO;
+    private HistoryMapper historyMapper;
 
     @BeforeEach
     void setUp() {

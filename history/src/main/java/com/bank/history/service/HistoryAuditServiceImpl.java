@@ -31,7 +31,7 @@ public class HistoryAuditServiceImpl implements HistoryAuditService {
 
     @Override
     public HistoryAudit patch(Long id, HistoryAudit historyAudit) {
-        repository.findById(id);
+        repository.findById(id).orElseThrow();
         historyAudit.setId(id);
         return repository.save(historyAudit);
     }
