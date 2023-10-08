@@ -34,7 +34,9 @@ class HistoryServiceImplTest {
 
     @BeforeAll
     public static void setUp() {
-        historyTest = new History(2L, 3L, 4L, 5L, 6L, 7L);
+        historyTest = new History(2L,
+                3L, 4L, 5L,
+                6L, 7L);
     }
 
     @BeforeEach
@@ -110,7 +112,8 @@ class HistoryServiceImplTest {
             historyService.patch(2L, historyTest);
             assertAll(
                     () -> assertEquals(2L, historyTest.getId()),
-                    () -> assertThrows(NotFoundException.class, () -> historyService.patch(1L, historyTest)
+                    () -> assertThrows(NotFoundException.class,
+                            () -> historyService.patch(1L, historyTest)
                     ));
         }
     }
@@ -130,8 +133,10 @@ class HistoryServiceImplTest {
                     () -> assertNotNull(result),
                     () -> assertNotEquals("", result.toString()),
                     () -> assertEquals(historyTest, result),
-                    () -> verify(repository, times(1)).deleteById(any(Long.class)),
-                    () -> assertThrows(NoSuchElementException.class, () -> historyService.deleteById(2L))
+                    () -> verify(repository,
+                            times(1)).deleteById(any(Long.class)),
+                    () -> assertThrows(NoSuchElementException.class,
+                            () -> historyService.deleteById(2L))
             );
         }
     }

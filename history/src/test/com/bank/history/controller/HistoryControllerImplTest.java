@@ -33,10 +33,13 @@ class HistoryControllerImplTest {
 
     @BeforeAll
     public static void setUp() {
-        history = new History(1L, 2L, 3L, 4L, 5L, 6L, 7L);
-        dto = new HistoryDTO(2L, 3L, 4L, 5L, 6L, 7L);
+        history = new History(1L, 2L, 3L,
+                4L, 5L, 6L,
+                7L);
+        dto = new HistoryDTO(2L, 3L,
+                4L, 5L, 6L,
+                7L);
     }
-
 
     @Test
     void showAll() {
@@ -49,7 +52,6 @@ class HistoryControllerImplTest {
                 (() -> assertNotNull(historyController.showAll())),
                 () -> assertEquals(ResponseEntity.of(Optional.of(listDTO)), historyController.showAll())
         );
-
     }
 
     @Test
@@ -61,8 +63,6 @@ class HistoryControllerImplTest {
                 () -> assertNotNull(historyController.showOne(1L)),
                 () -> assertEquals(ResponseEntity.ok(dto), historyController.showOne(1L))
         );
-
-
     }
 
     @Test

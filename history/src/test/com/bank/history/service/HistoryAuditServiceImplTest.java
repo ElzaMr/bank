@@ -115,12 +115,14 @@ class HistoryAuditServiceImplTest {
         void throwExceptionIfHistoryAuditNotFound() {
             when(repository.findById(1L)).thenReturn(Optional.empty());
 
-            assertThrows(NoSuchElementException.class, () -> historyService.patch(1L, historyAudit));
+            assertThrows(NoSuchElementException.class, () -> historyService
+                    .patch(1L, historyAudit));
         }
 
         @Test
         void checkReturnTypeAndSettingId() {
-            when(repository.findById(any(Long.class))).thenReturn(Optional.of(historyAudit));
+            when(repository.findById(any(Long.class))).thenReturn(Optional
+                    .of(historyAudit));
             HistoryAudit newAudit = new HistoryAudit("History",
                     "create",
                     "User1",
@@ -141,9 +143,11 @@ class HistoryAuditServiceImplTest {
 
         @Test
         void patchThrowExceptionIfHistoryAuditNotFound() {
-            when(repository.findById(any(Long.class))).thenReturn(Optional.empty());
+            when(repository.findById(any(Long.class)))
+                    .thenReturn(Optional.empty());
 
-            assertThrows(NoSuchElementException.class, ()->historyService.patch(1L,historyAudit));
+            assertThrows(NoSuchElementException.class,
+                    () -> historyService.patch(1L, historyAudit));
         }
     }
 
@@ -161,8 +165,10 @@ class HistoryAuditServiceImplTest {
                     () -> assertNotNull(result),
                     () -> assertNotEquals("", result.toString()),
                     () -> assertEquals(historyAudit, result),
-                    () -> verify(repository, times(1)).deleteById(any(Long.class)),
-                    () -> assertThrows(NoSuchElementException.class, () -> historyService.deleteById(2L))
+                    () -> verify(repository, times(1))
+                            .deleteById(any(Long.class)),
+                    () -> assertThrows(NoSuchElementException.class,
+                            () -> historyService.deleteById(2L))
             );
         }
     }

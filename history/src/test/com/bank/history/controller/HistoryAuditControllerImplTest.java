@@ -31,12 +31,10 @@ class HistoryAuditControllerImplTest {
 
     @BeforeAll
     public static void setUp() {
-        audit = new HistoryAudit(1L, "History",
-                "create",
-                "User",
-                "User1",
-                localDateTime, localDateTime,
-                "qwe", "qwe");
+        audit = HistoryAudit
+                .builder().id(1L).entityType("History").operationType("create")
+                .createdBy("User").modifiedBy("User1").newEntityJson("qwe")
+                .entityJson("qwe").build();
         listOfAudits = List.of(audit);
     }
 

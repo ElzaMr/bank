@@ -17,10 +17,13 @@ class HistoryMapperTest {
 
     @BeforeEach
     void setUp() {
-        history = new History(1L, 1L, 1L, 1L, 1L, 1L, 1L);
-        historyDTO = new HistoryDTO(1L, 1L, 1L, 1L, 1L, 1L);
+        history = new History(1L, 1L, 1L,
+                1L, 1L, 1L,
+                1L);
+        historyDTO = new HistoryDTO(1L, 1L,
+                1L, 1L, 1L,
+                1L);
         historyMapper = new HistoryMapperImpl();
-
     }
 
     @Test
