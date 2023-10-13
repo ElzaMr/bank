@@ -8,6 +8,7 @@ import org.webjars.NotFoundException;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Сервис модуля History реализует интерфейс HistoryService

@@ -29,6 +29,7 @@ class RandomUserCreatedTest {
         assertEquals(100, names.size());
     }
 
+
     @Test
     void returnValueShouldNotBeNull() {
         assertNotNull(result);
