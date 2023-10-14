@@ -4,6 +4,7 @@ package com.bank.history.service;
 import com.bank.history.Dto.HistoryDTO;
 import com.bank.history.entity.History;
 import com.bank.history.repository.HistoryRepository;
+import com.bank.history.service.HistoryServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

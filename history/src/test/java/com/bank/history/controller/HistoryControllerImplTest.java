@@ -1,6 +1,7 @@
 package com.bank.history.controller;
 
 import com.bank.history.Dto.HistoryDTO;
+import com.bank.history.controller.HistoryControllerImpl;
 import com.bank.history.entity.History;
 import com.bank.history.mapper.HistoryMapper;
 import com.bank.history.service.HistoryServiceImpl;

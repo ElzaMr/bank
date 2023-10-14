@@ -20,6 +20,9 @@ public class RandomUserCreated {
     }
 
     public static String returnRandomUser() {
+        if (userList.isEmpty()) {
+            return null;
+        }
         Random random = new Random();
         int randomIndex = random.nextInt(userList.size());
         return userList.remove(randomIndex);

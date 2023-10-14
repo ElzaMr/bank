@@ -2,6 +2,8 @@ package com.bank.history.mapper;
 
 import com.bank.history.Dto.HistoryDTO;
 import com.bank.history.entity.History;
+import com.bank.history.mapper.HistoryMapper;
+import com.bank.history.mapper.HistoryMapperImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

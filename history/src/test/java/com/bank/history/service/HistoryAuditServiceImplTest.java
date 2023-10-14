@@ -2,6 +2,7 @@ package com.bank.history.service;
 
 import com.bank.history.entity.HistoryAudit;
 import com.bank.history.repository.HistoryAuditRepository;
+import com.bank.history.service.HistoryAuditServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

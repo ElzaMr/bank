@@ -1,5 +1,6 @@
 package com.bank.history.controller;
 
+import com.bank.history.controller.HistoryAuditControllerImpl;
 import com.bank.history.entity.HistoryAudit;
 import com.bank.history.service.HistoryAuditService;
 import org.junit.jupiter.api.BeforeAll;
