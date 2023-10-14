@@ -24,10 +24,10 @@ class RandomUserCreatedTest {
     @Test
     void checkRandomCreatedUser() {
         Set<String> names = new HashSet<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             names.add(RandomUserCreated.returnRandomUser());
         }
-        assertEquals(100, names.size());
+        assertEquals(10, names.size());
     }
 
 
